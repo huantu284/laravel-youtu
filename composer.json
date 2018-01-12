@@ -1,0 +1,22 @@
+{
+    "name": "huantu/laravel-youtu",
+    "description": "laravel package for Tencent youtu api",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "huantu",
+            "email": "huantu284@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Huantu\\LaravelYoutu\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Huantu\\LaravelYoutu\\Tests\\": "tests/"
+        }
+    }
+}
