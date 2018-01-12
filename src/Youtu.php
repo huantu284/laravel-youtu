@@ -1342,7 +1342,53 @@ class YouTu
         return $ret;
     }
 
+    /**
+     * @param $image_data 图片base64位编码
+     * @param $card_type 身份证照片类型，0 表示身份证正面， 1表示身份证反面
+     * @return 返回的结果，JSON字符串，字段参见API文档
+     */
+    public static function idcardimgocr($image_data, $card_type = 0, $seq = '') 
+    {
 
+        $real_image_path = realpath($image_path);
+
+        if (!file_exists($real_image_path))
+        {
+            return array('httpcode' => 0, 'code' => self::HTTP_BAD_REQUEST, 'message' => 'file '.$image_path.' not exists', 'data' => array());
+        }
+
+        $expired = time() + self::EXPIRED_SECONDS;
+        $postUrl = Config('youtu.end_point') . 'youtu/ocrapi/idcardocr';
+        $sign = Auth::appSign($expired, Config('youtu.user_id'));
+
+        $post_data = array(
+            'app_id' =>  Config('youtu.appid'),
+            'image' => $image_data,
+            'seq' => $seq,
+            'card_type' => $card_type,
+        );
+
+        $req = array(
+            'url' => $postUrl,
+            'method' => 'post',
+            'timeout' => 10,
+            'data' => json_encode($post_data),
+            'header' => array(
+                'Authorization:'.$sign,
+                'Content-Type:text/json',
+                'Expect: ',
+            ),
+        );
+        $rsp  = Http::send($req);
+
+        $ret  = json_decode($rsp, true);
+
+        if(!$ret){
+            return self::getStatusText();
+        }
+
+        return $ret;
+    }
 
     /**
      * @param $url 图片url
